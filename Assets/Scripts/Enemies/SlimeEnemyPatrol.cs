@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class KnightEnemyPatrol : EnemyPatrol
+public class SlimeEnemyPatrol : EnemyPatrol
 {
-    private KnightEnemy knightEnemy;
+    private SlimeEnemy slimeEnemy;
     private bool _playerInSight;
     private bool _playerInAttackRange;
     // Update is called once per frame
 
     public override void Start() {
         base.Start();
-        knightEnemy = enemy.GetComponent<KnightEnemy>();
+        slimeEnemy = enemy.GetComponent<SlimeEnemy>();
+        movingLeft = true;
     }
 
     protected override void MoveInDirection(float _direction){
@@ -19,11 +18,11 @@ public class KnightEnemyPatrol : EnemyPatrol
         animator.SetBool("moving", true);
 
         // Make the enemy facing the direction
-        enemyTransform.localScale = new Vector3(Mathf.Abs(initScale.x)*_direction, enemyTransform.localScale.y, enemyTransform.localScale.z);
+        enemyTransform.localScale = new Vector3(-Mathf.Abs(initScale.x)*_direction, enemyTransform.localScale.y, enemyTransform.localScale.z);
 
         // Move the enemy to the direction
         if(_playerInSight){
-            _playerInAttackRange = knightEnemy.PlayerInAttackRange();
+            _playerInAttackRange = slimeEnemy.PlayerInAttackRange();
 
             if(_playerInAttackRange){
                 animator.SetBool("moving", false);
@@ -39,16 +38,16 @@ public class KnightEnemyPatrol : EnemyPatrol
 
     void Update()
     {
-        if(!knightEnemy.playerHealth.dead){
-            _playerInSight = knightEnemy.PlayerInSight();
+        if(!slimeEnemy.playerHealth.dead){
+            _playerInSight = slimeEnemy.PlayerInSight();
             enemyPosition = enemyTransform.position;
             if(_playerInSight){
-                if(knightEnemy.playerTransform.position.x < enemyPosition.x){
+                if(slimeEnemy.playerTransform.position.x < enemyPosition.x){
                     if(enemyPosition.x > leftEdge.position.x){
                         MoveInDirection(-1);
                     }
                 }
-                if(knightEnemy.playerTransform.position.x > enemyPosition.x){
+                if(slimeEnemy.playerTransform.position.x > enemyPosition.x){
                     if(enemyPosition.x < rightEdge.position.x){
                         MoveInDirection(1);
                     }

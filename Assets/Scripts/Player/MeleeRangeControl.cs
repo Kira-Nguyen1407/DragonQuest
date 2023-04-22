@@ -2,19 +2,20 @@ using UnityEngine;
 
 public class MeleeRangeControl : MonoBehaviour
 {
-    void Start(){
+    [SerializeField] protected BoxCollider2D meleeRangeBox;
+
+    public virtual void Start(){
         DisableMeleeRange();
     }
-    [SerializeField] BoxCollider2D meleeRangeBox;
-    public void EnableMeleeRange(){
+    public virtual void EnableMeleeRange(){
         meleeRangeBox.enabled = true;
     }
 
-    public void DisableMeleeRange(){
+    public virtual void DisableMeleeRange(){
         meleeRangeBox.enabled = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
+    protected virtual void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Enemy"){
             Health enemyHealth = other.GetComponent<Health>();
             if(enemyHealth != null){

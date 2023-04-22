@@ -7,8 +7,8 @@ public class GameOverScreenUI : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject gameOverScreen;
     public void Restart(){
-        playerRespawn.Respawn();
         // SceneManager.LoadScene("Level1");
+        playerRespawn.Respawn();
         DeactivateGameOverScreen();
     }
 

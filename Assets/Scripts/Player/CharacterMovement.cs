@@ -46,7 +46,7 @@ public class CharacterMovement : MonoBehaviour
         // this.moveSpeed = 5.0f;
         boxCollider = GameObject.Find("Character").GetComponent<BoxCollider2D>();
         jumpDistanceThreshold = 0.2f;
-        totalWallJumps = 5;
+        totalWallJumps = 3;
     }
 
     // Update is called once per frame
@@ -82,6 +82,7 @@ public class CharacterMovement : MonoBehaviour
         body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
     }
     private void HorizontalMoveInTheAir(){
+        // Debug.Log("HorizontalMoveInTheAir");
         SetDirection();
         body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
     }
@@ -133,14 +134,14 @@ public class CharacterMovement : MonoBehaviour
         }
         else{
             animator.SetBool("grounded", false);
-            
-            if(horizontalInput != 0){
-                HorizontalMoveInTheAir();
-            }
 
             if(onWall()){
                 jumpCounter = extraJumps;
-                if(Mathf.Sign(horizontalInput) != Mathf.Sign(transform.localScale.x)){
+                // Debug.Log("horizontalInput: " + horizontalInput);
+                // Debug.Log("localScale.x: " + transform.localScale.x);
+
+                if(Mathf.Sign(horizontalInput) != Mathf.Sign(transform.localScale.x) && horizontalInput != 0){
+                    // Debug.Log("Start moving in the air");
                     HorizontalMoveInTheAir();
                 }
                 else{
@@ -148,9 +149,13 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
             else{
+                // Debug.Log("the player is not on the wall");
                 body.gravityScale = 5.0f;
                 if(Input.GetKeyDown(KeyCode.W)){
                     MultipleJump();
+                }
+                if(horizontalInput != 0){
+                    HorizontalMoveInTheAir();
                 }
             }
         }
@@ -259,7 +264,7 @@ public class CharacterMovement : MonoBehaviour
         Debug.Log("wallJumpCounter: " + wallJumpCounter);
         if(horizontalInput != 0 && Input.GetKeyDown(KeyCode.W)){
             if(wallJumpCounter < totalWallJumps){
-                body.velocity = new Vector2(-Mathf.Sign(transform.localScale.x)*moveSpeed, jumpPower);
+                body.velocity = new Vector2(-Mathf.Sign(transform.localScale.x)*moveSpeed, jumpPower*0.6f);
                 wallJumpCounter++;
             }
             // body.AddForce(new Vector2(-Mathf.Sign(transform.localScale.x)*horizontalInput*moveSpeed, wallJumpY));
@@ -297,7 +302,14 @@ public class CharacterMovement : MonoBehaviour
     // }
 
     public bool onWall(){
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x,0), 0.1f, wallLayer);
+        // set up the raycast parameters
+        Vector2 direction = transform.localScale.x > 0 ? Vector2.right : Vector2.left; // check direction player is facing
+        Vector2 position = transform.position;
+        float distance = 0.7f; // adjust this value to your preference
+
+        // perform the raycast
+        RaycastHit2D raycastHit = Physics2D.Raycast(position, direction, distance, wallLayer);
+        // RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x,0), distance, wallLayer);
         // if(raycastHit.collider != null){
         //     Debug.Log("Distance from the ground: " + raycastHit.distance);
         //     if(raycastHit.distance > jumpDistanceThreshold){
