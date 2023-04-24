@@ -22,8 +22,8 @@ public class Room : MonoBehaviour
     public void ActivateRoom(bool _status){
         for(int i = 0; i < enemies.Length; i++){
             if(enemies[i] != null){
-                Debug.Log("Deactivating Spike Head trap in the room");
-                Debug.Log($"_status: {_status}");
+                // Debug.Log("Deactivating Spike Head trap in the room");
+                // Debug.Log($"_status: {_status}");
                 enemies[i].SetActive(_status);
                 enemies[i].transform.position = initialPositions[i];
             }
