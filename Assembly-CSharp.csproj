@@ -83,6 +83,7 @@
      <Compile Include="Assets\Scripts\Health\Health.cs" />
      <Compile Include="Assets\Scripts\UI\VolumeText.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+     <Compile Include="Assets\Scripts\Player\RightCollider.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
      <Compile Include="Assets\Scripts\UI\MainMenuSoundManager.cs" />
      <Compile Include="Assets\Scripts\UI\SettingScreenUI.cs" />
@@ -93,6 +94,7 @@
      <Compile Include="Assets\Scripts\Enemies\SlimeEnemyPatrol.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\Collectable\Collector.cs" />
+     <Compile Include="Assets\Scripts\KeyManager.cs" />
      <Compile Include="Assets\Scripts\UI\SelectionArrow.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\UI\MainMenuSelection.cs" />
@@ -107,7 +109,6 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\Scripts\Traps\SawTrap.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\KeyManager.cs" />
      <None Include="Assets\Sprites\Dragon Quest\Knight Files\Read Me.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />

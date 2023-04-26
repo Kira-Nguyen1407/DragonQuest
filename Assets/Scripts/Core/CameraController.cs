@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour
         // speed = 3.0f;
         aheadDistance = 2.0f;
         cameraSpeed = 3.0f;
+        // lookAhead = 2.0f;
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class CameraController : MonoBehaviour
 
     private void CameraMovement(){
         if(!playerMovement.isWallJumping){
-            transform.position = new Vector3(character.position.x + lookAhead, transform.position.y, transform.position.z);
+            transform.position = new Vector3(character.position.x + lookAhead, character.position.y, transform.position.z);
             // previousPosition = transform.position;;
             lookAhead = Mathf.Lerp(lookAhead, (aheadDistance * character.localScale.x), Time.deltaTime * cameraSpeed);
         }

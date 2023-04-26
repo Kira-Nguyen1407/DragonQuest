@@ -6,16 +6,22 @@ public class CharacterMovement : MonoBehaviour
     public Rigidbody2D body;
     [SerializeField] private Health playerHealth;
     [SerializeField] private CharacterAttack characterAttack;
-    public bool keyCollected;
     public bool collidingWithObstacle;
 
+    [Header("Collectables")]
+    private int nSecretBooks;
+    private int totalSecretBooks;
+    public bool keyCollected;
+
+    [Header("Animations")]
     public Animator animator;
     // public bool grounded;
+
+    [Header("Colliders and Layers")]
     public BoxCollider2D boxCollider;
     [SerializeField] public LayerMask groundLayer;
     [SerializeField] public LayerMask wallLayer;
-    [SerializeField] public int totalWallJumps;
-    private int wallJumpCounter;
+    
 
     [Header("Normal Jump components")]
     [SerializeField] public float moveSpeed;
@@ -26,18 +32,20 @@ public class CharacterMovement : MonoBehaviour
     [Header("Sound components")]
     [SerializeField] private AudioClip jumpSound;
 
-    [Header("Coyote Time")]
-    [SerializeField] private float coyoteTime; // How much time the player can hang in the air before jumping
-    private float coyoteCounter; // How much time passed since the player ran off the edge
+    // [Header("Coyote Time")]
+    // [SerializeField] private float coyoteTime; // How much time the player can hang in the air before jumping
+    // private float coyoteCounter; // How much time passed since the player ran off the edge
 
     [Header("Multiple Jumps")]
     [SerializeField] private int extraJumps; // one for double jump, two for triple jump
     private int jumpCounter; // How many extra jumps we have at the moment
 
     [Header("Wall Jumping")]
-    [SerializeField] private float wallJumpX; // Horizontal wall jump forces
-    [SerializeField] private float wallJumpY; // Vertical wall jump forces
     public bool isWallJumping;
+    [SerializeField] public int totalWallJumps;
+    private int wallJumpCounter;
+    // [SerializeField] private float wallJumpX; // Horizontal wall jump forces
+    // [SerializeField] private float wallJumpY; // Vertical wall jump forces
 
 
     // Start is called before the first frame update
@@ -49,7 +57,9 @@ public class CharacterMovement : MonoBehaviour
         jumpDistanceThreshold = 0.2f;
         totalWallJumps = 3;
         keyCollected = false;
-        collidingWithObstacle = false;
+        nSecretBooks = 0;
+        totalSecretBooks = 3;
+        // collidingWithObstacle = false;
     }
 
     // Update is called once per frame
@@ -140,6 +150,18 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void AddSecretBook(){
+        nSecretBooks++;
+    }
+
+    private bool CollectedAllSecretBooks(){
+        if(nSecretBooks >= totalSecretBooks){
+            return true;
+        }
+
+        return false;
+    }
+
     public void Move(){
         // if(!collidingWithObstacle){
         //     // Debug.Log("The player is not colliding with obstacles");
@@ -170,6 +192,7 @@ public class CharacterMovement : MonoBehaviour
             else{
                 // Debug.Log("On the wall!");
                 // Debug.Log("Horizontal Input: " + horizontalInput);
+            
                 horizontalInput = Input.GetAxis("Horizontal");
                 if(Input.GetKeyDown(KeyCode.W) && horizontalInput == 0){
                     animator.SetBool("grounded", false);
@@ -179,20 +202,20 @@ public class CharacterMovement : MonoBehaviour
                 else if(Input.GetKeyDown(KeyCode.W) && horizontalInput != 0 && 
                         Mathf.Sign(horizontalInput) == Mathf.Sign(transform.localScale.x))
                 {
-                    WallJump();
+                    if(CollectedAllSecretBooks()){
+                        WallJump();
+                    }
                 }
                 else{
                     // Debug.Log("Moving on the ground");
                     MoveOnTheGround();
                 }
             }
-            
         }
         else{
             // Debug.Log("Here");
             animator.SetBool("grounded", false);
             horizontalInput = Input.GetAxis("Horizontal");
-
 
             if(onWall()){
                 jumpCounter = extraJumps;
@@ -204,20 +227,21 @@ public class CharacterMovement : MonoBehaviour
                     HorizontalMoveInTheAir();
                 }
                 else{
-                    WallJump();
+                    if(CollectedAllSecretBooks()){
+                        WallJump();
+                    }
                 }
             }
             else{
                 // Debug.Log("the player is not on the wall");
                 body.gravityScale = 5.0f;
-                if(Input.GetKeyDown(KeyCode.W)){
-                    MultipleJump();
+                if(CollectedAllSecretBooks()){
+                    if(Input.GetKeyDown(KeyCode.W)){
+                        MultipleJump();
+                    }
                 }
-
+                
                 HorizontalMoveInTheAir();
-
-                // if(horizontalInput != 0){
-                // }
             }
         }
 

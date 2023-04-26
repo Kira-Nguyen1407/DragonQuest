@@ -11,7 +11,7 @@ public class Collector : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
 
     [Header("Sound effects")]
-    [SerializeField] private AudioClip lifeCollectedSound;
+    [SerializeField] private AudioClip collectedSound;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +21,7 @@ public class Collector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player"){
-            SoundManager.instance.PlaySound(lifeCollectedSound);
+            SoundManager.instance.PlaySound(collectedSound);
             if(gameObject.tag == "Heart"){
                 other.GetComponent<Health>().AddHealth(healthValue);
             }
@@ -33,6 +33,9 @@ public class Collector : MonoBehaviour
             }
             else if(gameObject.tag == "Raspberry"){
                 scoreManager.UpdateScore(50);
+            }
+            if(gameObject.tag == "SecretBook"){
+                other.GetComponent<CharacterMovement>().AddSecretBook();
             }
             gameObject.SetActive(false);
         }
