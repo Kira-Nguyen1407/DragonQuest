@@ -19,11 +19,15 @@ public class Health : MonoBehaviour
     [SerializeField] private PlayerRespawn playerRespawn;
     private int playerLayer;
 
+    [Header("Enemy components")]
+    // private int enemiesLayer;
+    [SerializeField] SlimeEnemy slimeEnemy;
+
+    [Header("Shared components")]
     private Animator animator;
     public bool dead;
-    private int enemiesLayer;
     public bool isHurting;
-    private Behaviour[] components;
+    // private Behaviour[] components;
 
     [Header("Sound components")]
     [SerializeField] private AudioClip deadSound;
@@ -43,24 +47,28 @@ public class Health : MonoBehaviour
         // totalHealth = 10.0f;
         animator = GetComponent<Animator>();
         spriteRend = GetComponent<SpriteRenderer>();
-        components = gameObject.GetComponents<Behaviour>();
+        // components = gameObject.GetComponents<Behaviour>();
         dead = false;
         playerLayer = 10;
-        enemiesLayer = 11;
+        // enemiesLayer = 11;
         // flashesRate = 1.0f;
         iFramesDuration = 3.0f;
         numberOfFlashes = 3.0f;
     }
 
     public void TakeDamage(float _damage){
-        currentHealth = Mathf.Clamp(currentHealth - _damage, 0, totalHealth);
         if(currentHealth > 0){
             // the player is hurt
-            animator.SetTrigger("hurt");
-            SoundManager.instance.PlaySound(hurtSound);
-            StartCoroutine(Invulnerability());
+            if(!isHurting){
+                currentHealth = Mathf.Clamp(currentHealth - _damage, 0, totalHealth);
+                animator.SetTrigger("hurt");
+                SoundManager.instance.PlaySound(hurtSound);
+                if(gameObject.layer == playerLayer || slimeEnemy.isBig){
+                    StartCoroutine(Invulnerability());
+                }
+            }
         }
-        else{
+        if(currentHealth <= 0){
             if(!dead){
                 // // Set the grounded to true to prevent executing the jump animation instead of death animation
                 // animator.SetBool("grounded", true);
@@ -71,8 +79,11 @@ public class Health : MonoBehaviour
                 SoundManager.instance.PlaySound(deadSound);
                 dead = true;
             }
-            // the player dead
         }
+    //     else{
+            
+    //         // the player dead
+    //     }
     }
 
     public void Death(){
@@ -146,7 +157,7 @@ public class Health : MonoBehaviour
     }
 
     private IEnumerator Invulnerability(){
-        Physics2D.IgnoreLayerCollision(playerLayer, enemiesLayer, true);
+        // Physics2D.IgnoreLayerCollision(playerLayer, enemiesLayer, true);
         isHurting = true;
         //invulnerability duration
         for(int i=0; i< numberOfFlashes * 2; i++){
@@ -156,7 +167,7 @@ public class Health : MonoBehaviour
             spriteRend.color = Color.white;
             yield return new WaitForSeconds(iFramesDuration/ (numberOfFlashes*2));
         }
-        Physics2D.IgnoreLayerCollision(playerLayer, enemiesLayer, false);
+        // Physics2D.IgnoreLayerCollision(playerLayer, enemiesLayer, false);
         isHurting = false;
     }
 

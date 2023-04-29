@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     [Header("Attack parameters")]
     [SerializeField] protected float attackCoolDown;
-    [SerializeField] protected float damage;
+    protected float damage;
     [SerializeField] protected float range;
 
     [Header("Collider parameters")]
@@ -19,8 +17,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     protected float coolDownTimer;
 
-    [Header("Enemy parameters")]
+    [Header("Base Enemy parameters")]
     [SerializeField] protected Animator animator;
+    [SerializeField] public bool isBig;
+    // [SerializeField] public float yRange;
 
     // // Start is called before the first frame update
     protected virtual void Start()
@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
         // range = 5.0f;
         // colliderDistance = 0.0f;
         damage = 1.0f;
+        // yRange = 1.0f;
         attackCoolDown = 1.0f;
         animator = GetComponent<Animator>();
         // enemyPatrol = GetComponentInParent<EnemyPatrol>();
@@ -44,10 +45,19 @@ public class Enemy : MonoBehaviour
     }
 
     public virtual void DamagePlayer(){
-        if(PlayerInSight()){
-            if(!playerHealth.isHurting && !playerHealth.dead){
-                playerHealth.TakeDamage(damage);
+        if(!playerHealth.isHurting && !playerHealth.dead){
+            if(playerHealth.isHurting){
+                damage = 0;
             }
+            else{
+                if(isBig){
+                    damage = 2;
+                }
+                else{
+                    damage = 1;
+                }
+            }
+            playerHealth.TakeDamage(damage);
         }
     }
 

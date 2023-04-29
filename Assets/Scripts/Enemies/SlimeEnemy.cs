@@ -5,6 +5,7 @@ public class SlimeEnemy : Enemy
     [Header("Enemy parameters")]
     [SerializeField] private SlimeEnemyPatrol slimeEnemyPatrol;
     [SerializeField] private Health enemyHealth;
+    [SerializeField] private Range enemyRange;
 
     [Header("Attack Sound")]
     [SerializeField] private AudioClip meleeHitSound;
@@ -23,8 +24,6 @@ public class SlimeEnemy : Enemy
                     coolDownTimer = 0;
                     animator.SetTrigger("meleeAttack");
                     SoundManager.instance.PlaySound(meleeHitSound);
-
-
                 }
                 else{
                     coolDownTimer = coolDownTimer + Time.deltaTime;
@@ -43,13 +42,20 @@ public class SlimeEnemy : Enemy
 
     public override bool PlayerInSight()
     {
-        if(playerTransform.position.x >= slimeEnemyPatrol.leftEdge.position.x && 
-            playerTransform.position.x <= slimeEnemyPatrol.rightEdge.position.x)
-        {
-            return true;
-        }
+        return enemyRange.playerInSight;
+        // if(playerTransform.position.x >= slimeEnemyPatrol.leftEdge.position.x && 
+        //     playerTransform.position.x <= slimeEnemyPatrol.rightEdge.position.x)
+        // {
+        //     if(playerTransform.position.y >= slimeEnemyPatrol.leftEdge.position.y - yRange/3 && 
+        //         playerTransform.position.y >= slimeEnemyPatrol.rightEdge.position.y - yRange/3 &&
+        //             playerTransform.position.y < slimeEnemyPatrol.leftEdge.position.y + yRange &&
+        //                 playerTransform.position.y < slimeEnemyPatrol.rightEdge.position.y + yRange)
+        //     {
+        //         return true;
+        //     }
+        // }
 
-        return false;
+        // return false;
     }
 
     public bool PlayerInAttackRange(){
@@ -60,14 +66,20 @@ public class SlimeEnemy : Enemy
         return hit.collider != null;
     }
 
-    public override void DamagePlayer()
-    {
+    public void CheckDamagePlayer(){
         if(PlayerInAttackRange()){
-            if(!playerHealth.isHurting && !playerHealth.dead){
-                playerHealth.TakeDamage(damage);
-            }
+            DamagePlayer();
         }
     }
+
+    // public override void DamagePlayer()
+    // {
+    //     if(PlayerInAttackRange()){
+    //         if(!playerHealth.isHurting && !playerHealth.dead){
+    //             playerHealth.TakeDamage(damage);
+    //         }
+    //     }
+    // }
 
     public void DisableAttackPoint(){
         attackPoint.DisableMeleeRange();

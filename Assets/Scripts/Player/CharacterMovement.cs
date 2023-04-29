@@ -154,7 +154,7 @@ public class CharacterMovement : MonoBehaviour
         nSecretBooks++;
     }
 
-    private bool CollectedAllSecretBooks(){
+    public bool CollectedAllSecretBooks(){
         if(nSecretBooks >= totalSecretBooks){
             return true;
         }

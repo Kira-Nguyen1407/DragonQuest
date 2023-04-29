@@ -1,14 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Trap : MonoBehaviour
 {
-    [SerializeField] protected float damage;
+    protected float damage;
 
     protected virtual void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player"){
-            other.GetComponent<Health>().TakeDamage(damage);
+            Health playerHealth = other.GetComponent<Health>();
+            if(playerHealth.isHurting){
+                damage = 0;
+            }
+            else{
+                damage = 1;
+            }
+            playerHealth.TakeDamage(damage);
         }
     }
 }

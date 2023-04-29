@@ -22,13 +22,20 @@ public class SlimeEnemyPatrol : EnemyPatrol
 
         // Move the enemy to the direction
         if(_playerInSight){
+            Debug.Log("player in sight");
             _playerInAttackRange = slimeEnemy.PlayerInAttackRange();
 
             if(_playerInAttackRange){
                 animator.SetBool("moving", false);
             }
             else{
-                enemyTransform.position = new Vector3(enemyTransform.position.x + Time.deltaTime*_direction*speed*3, enemyTransform.position.y, enemyTransform.position.z);
+                // enemyTransform.position = new Vector3(enemyTransform.position.x + Time.deltaTime*_direction*speed*3, enemyTransform.position.y, enemyTransform.position.z);
+                if(slimeEnemy.isBig){
+                    enemyTransform.position = new Vector3(enemyTransform.position.x + Time.deltaTime*_direction*speed*3, enemyTransform.position.y, enemyTransform.position.z);
+                }
+                else{
+                    enemyTransform.position = new Vector3(enemyTransform.position.x + Time.deltaTime*_direction*speed, enemyTransform.position.y, enemyTransform.position.z);
+                }
             }
         }
         else{
@@ -41,7 +48,7 @@ public class SlimeEnemyPatrol : EnemyPatrol
         if(!slimeEnemy.playerHealth.dead){
             _playerInSight = slimeEnemy.PlayerInSight();
             enemyPosition = enemyTransform.position;
-            if(_playerInSight){
+            if(_playerInSight && slimeEnemy.isBig){
                 if(slimeEnemy.playerTransform.position.x < enemyPosition.x){
                     if(enemyPosition.x > leftEdge.position.x){
                         MoveInDirection(-1);

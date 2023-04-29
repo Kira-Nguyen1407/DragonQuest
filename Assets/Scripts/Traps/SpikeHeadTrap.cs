@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpikeHeadTrap : Trap
@@ -21,10 +19,11 @@ public class SpikeHeadTrap : Trap
     // Start is called before the first frame update
     void Start()
     {
-        damage = 1.0f;
-        range = 6.0f;
-        checkDelay = 1.0f;
-        speed = 2.0f;
+        // damage = 1.0f;
+        // range = 6.0f;
+        // checkDelay = 1.0f;
+        // speed = 2.0f;
+        CheckForPlayer();
     }
 
     // Update is called once per frame
@@ -72,7 +71,6 @@ public class SpikeHeadTrap : Trap
     private void Stop(){
         destination = transform.position; // set the destination as current position, so it doesn't move
         attacking = false;
-
     }
     protected override void OnTriggerEnter2D(Collider2D other) {
         SoundManager.instance.PlaySound(impactSound);
