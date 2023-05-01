@@ -22,7 +22,7 @@ public class SlimeEnemyPatrol : EnemyPatrol
 
         // Move the enemy to the direction
         if(_playerInSight){
-            Debug.Log("player in sight");
+            // Debug.Log("player in sight");
             _playerInAttackRange = slimeEnemy.PlayerInAttackRange();
 
             if(_playerInAttackRange){

@@ -72,7 +72,7 @@ public class RockHeadTrap : Trap
         //     }
         // }
         if(canAttack){
-            Debug.Log("Player is in range");
+            // Debug.Log("Player is in range");
             if(!attackFinished){
                 Attack();
             }

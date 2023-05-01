@@ -14,6 +14,8 @@ public class SelectionArrow : MonoBehaviour
     {
         rect = GetComponent<RectTransform>();
         currentPosition = 0;
+        // Set the initial position of the arrow at "restart" option
+        rect.position = new Vector3(rect.position.x, options[currentPosition].position.y, 0);
     }
 
     // Update is called once per frame

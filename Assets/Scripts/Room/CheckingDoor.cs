@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class CheckingDoor : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class CheckingDoor : MonoBehaviour
 
     [Header("Flags")]
     private bool disableFlag;
+    [SerializeField] private bool isFinalDoor;
 
 
     // [Header("Checking variables")]
@@ -65,8 +68,12 @@ public class CheckingDoor : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other) {
         if(other.gameObject.tag == "Player"){
             if(disableFlag){
+                if(isFinalDoor){
+                    SceneManager.LoadScene("End");
+                }
                 DeactivateDoor();
             }
+            
         }
     }
 

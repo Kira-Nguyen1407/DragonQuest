@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -6,7 +7,14 @@ public class CharacterMovement : MonoBehaviour
     public Rigidbody2D body;
     [SerializeField] private Health playerHealth;
     [SerializeField] private CharacterAttack characterAttack;
-    public bool collidingWithObstacle;
+    [SerializeField] private float initGravity;
+    [SerializeField] private float initPlayerMass;
+    private bool isFallingDown;
+    private float checkingFallingDownPeriod;
+    private float fallingSpeed;
+    private float fallingTime;
+    private float maxSpeedAllowed;
+    // public bool collidingWithObstacle;
 
     [Header("Collectables")]
     private int nSecretBooks;
@@ -21,6 +29,12 @@ public class CharacterMovement : MonoBehaviour
     public BoxCollider2D boxCollider;
     [SerializeField] public LayerMask groundLayer;
     [SerializeField] public LayerMask wallLayer;
+    [SerializeField] protected float xRange;
+    [SerializeField] protected float yRange;
+
+    [SerializeField] protected float colliderDistance;
+
+
     
 
     [Header("Normal Jump components")]
@@ -59,6 +73,10 @@ public class CharacterMovement : MonoBehaviour
         keyCollected = false;
         nSecretBooks = 0;
         totalSecretBooks = 3;
+        checkingFallingDownPeriod = 0.05f;
+        fallingTime = 0;
+        isFallingDown = false;
+        maxSpeedAllowed = 1.8f;
         // collidingWithObstacle = false;
     }
 
@@ -66,6 +84,7 @@ public class CharacterMovement : MonoBehaviour
     void Update()
     {
         if(!playerHealth.dead){
+            // ShowPlayerVelocity();
             Move();
         }
         // if(wallJumpCoolDown < 0.2f){
@@ -89,6 +108,46 @@ public class CharacterMovement : MonoBehaviour
         // }
     }
 
+    private void FixedUpdate() {
+        if(isFallingDown){
+            if(Time.frameCount % 5 == 0){
+                fallingTime = fallingTime + 0.1f;
+                fallingSpeed = body.gravityScale*fallingTime;
+                // Debug.Log("Falling speed: " + fallingSpeed);
+                if(fallingSpeed < maxSpeedAllowed){
+                    // Decrease the gravity and player's mass to prevent the player from falling through the ground
+                    body.gravityScale = Mathf.Clamp(body.gravityScale - 3.5f, 0, initGravity);
+                    body.mass = Mathf.Clamp(body.mass - 0.8f, 0, initPlayerMass);
+                }
+            }
+        }
+    }
+
+    IEnumerator CheckIfFallingDown(){
+        float preYCoordinate = transform.position.y;
+        yield return new WaitForSeconds(checkingFallingDownPeriod);
+        float currentYCoordinate = transform.position.y;
+        if(currentYCoordinate < preYCoordinate){
+            isFallingDown = true;
+        }
+        else{
+            isFallingDown = false;
+            fallingTime = 0;
+            // Reset the gravity and player's mass when the player no longer falls down
+            body.gravityScale = initGravity;
+            body.mass = initPlayerMass;
+        }
+    }
+
+    // private void DecreasePlayerMass(){
+    //     if(isFallingDown){
+    //         if(fallingSpeed > maxSpeedAllowed){
+    //             body.gravityScale = body.gravityScale - 0.5f;
+    //             body.mass = body.mass - 0.2f;
+    //         }
+    //     }
+    // }
+
     private void MoveOnTheGround(){
         SetDirection();
         animator.SetBool("run", horizontalInput != 0);
@@ -104,6 +163,13 @@ public class CharacterMovement : MonoBehaviour
         SetDirection();
         body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
 
+        // if(CollidingWithObstacles()){
+        //     // Debug.Log("Colliding with an obstacle");
+        //     body.velocity = Vector2.zero;
+        // }
+        // else{
+        //     // Debug.Log("No longer colliding with an obstacle");
+        // }
         // if(!collidingWithObstacle){
         //     Debug.Log("Moving horizontal in the air");
         //     body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
@@ -163,6 +229,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     public void Move(){
+        StartCoroutine(CheckIfFallingDown());
         // if(!collidingWithObstacle){
         //     // Debug.Log("The player is not colliding with obstacles");
         // }
@@ -170,6 +237,11 @@ public class CharacterMovement : MonoBehaviour
         //     Debug.Log("The player is colliding with the obstacles");
         // }
         if(isGrounded()){
+            // Reset falling time if the player fell down before
+            // fallingTime = 0;
+            // Reset falling flag because the player is grounding now
+            // isFallingDown = false;
+
             wallJumpCounter = 0;
             // Reset the gravity scale after performing wall jump
             body.gravityScale = 5.0f;
@@ -186,6 +258,7 @@ public class CharacterMovement : MonoBehaviour
                     JumpFromTheGround();
                 }
                 else{
+                    // Debug.Log("Grounded");
                     MoveOnTheGround();
                 }
             }
@@ -194,11 +267,14 @@ public class CharacterMovement : MonoBehaviour
                 // Debug.Log("Horizontal Input: " + horizontalInput);
             
                 horizontalInput = Input.GetAxis("Horizontal");
+
+                // Normal jump when encountering the wall
                 if(Input.GetKeyDown(KeyCode.W) && horizontalInput == 0){
                     animator.SetBool("grounded", false);
                     body.velocity = new Vector2(body.velocity.x, jumpPower);
                     SoundManager.instance.PlaySound(jumpSound);
                 }
+                // Do wall jump if the player collected all secret books
                 else if(Input.GetKeyDown(KeyCode.W) && horizontalInput != 0 && 
                         Mathf.Sign(horizontalInput) == Mathf.Sign(transform.localScale.x))
                 {
@@ -209,6 +285,12 @@ public class CharacterMovement : MonoBehaviour
                 else{
                     // Debug.Log("Moving on the ground");
                     MoveOnTheGround();
+                    // if(isGrounded()){
+                        
+                    // }
+                    // else{
+                    //     HorizontalMoveInTheAir();
+                    // }
                 }
             }
         }
@@ -308,9 +390,12 @@ public class CharacterMovement : MonoBehaviour
             if(raycastHit.distance > jumpDistanceThreshold){
                 return false;
             }
+            else{
+                return true;
+            }
         }
         
-        return true;
+        return false;
         // return raycastHit.collider != null;
     }
 
@@ -321,25 +406,49 @@ public class CharacterMovement : MonoBehaviour
     // }
 
     public bool onWall(){
-        // set up the raycast parameters
-        Vector2 direction = transform.localScale.x > 0 ? Vector2.right : Vector2.left; // check direction player is facing
-        Vector2 position = transform.position;
-        float distance = 0.7f; // adjust this value to your preference
+        // // set up the raycast parameters
+        // Vector2 direction = transform.localScale.x > 0 ? Vector2.right : Vector2.left; // check direction player is facing
+        // Vector2 position = transform.position;
+        // float distance = 0.7f;
 
-        // perform the raycast
-        RaycastHit2D raycastHit = Physics2D.Raycast(position, direction, distance, wallLayer);
-        // RaycastHit2D raycastHit = Physics2D.Raycast(position, direction, distance);
+        // // perform the raycast
+        // RaycastHit2D raycastHit = Physics2D.Raycast(position, direction, distance, wallLayer);
+        // // RaycastHit2D raycastHit = Physics2D.Raycast(position, direction, distance);
 
-        // RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x,0), distance, wallLayer);
-        // if(raycastHit.collider != null){
-        //     Debug.Log("Distance from the ground: " + raycastHit.distance);
-        //     if(raycastHit.distance > jumpDistanceThreshold){
-        //         return false;
-        //     }
-        // }
+        // // RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x,0), distance, wallLayer);
+        // // if(raycastHit.collider != null){
+        // //     Debug.Log("Distance from the ground: " + raycastHit.distance);
+        // //     if(raycastHit.distance > jumpDistanceThreshold){
+        // //         return false;
+        // //     }
+        // // }
         
-        // return true;
-        return raycastHit.collider != null;
+        // // return true;
+        // return raycastHit.collider != null;
+        RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right*xRange*transform.localScale.x*colliderDistance,
+            new Vector3(boxCollider.bounds.size.x, boxCollider.bounds.size.y*yRange, boxCollider.bounds.size.z), 0,
+                new Vector2(transform.localScale.x,0), 0, wallLayer);
+        // RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right*range*transform.localScale.x*colliderDistance,
+        //     new Vector3(boxCollider.bounds.size.x, boxCollider.bounds.size.y*range, boxCollider.bounds.size.z), 0,
+        //         Vector2.left, 0, wallLayer);
+
+        return hit.collider != null;
+    }
+
+    // public bool CollidingWithObstacles(){
+
+    //     RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right*xRange*transform.localScale.x*colliderDistance,
+    //         new Vector3(boxCollider.bounds.size.x*xRange, boxCollider.bounds.size.y*yRange, boxCollider.bounds.size.z), 0,
+    //             new Vector2(transform.localScale.x,0), 0, groundLayer);
+
+    //     return hit.collider != null;
+    // }
+
+    public virtual void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        // Gizmos.DrawCube(boxCollider.bounds.center, boxCollider.bounds.size);
+        Gizmos.DrawWireCube(boxCollider.bounds.center + transform.right*xRange*transform.localScale.x*colliderDistance,
+            new Vector3(boxCollider.bounds.size.x*xRange, boxCollider.bounds.size.y*yRange, boxCollider.bounds.size.z));
     }
 
     // private void OnCollisionEnter2D(Collision2D other) {
@@ -361,6 +470,14 @@ public class CharacterMovement : MonoBehaviour
     public bool canAttack(){
         return !onWall();
         // return horizontalInput == 0 && isGrounded() && !onWall();
+    }
+
+    public void ShowPlayerVelocity(){
+        if(!isGrounded()){
+            float freeFallVelocity = body.velocity.y;
+            Debug.Log("Free fall velocity of the player: " + freeFallVelocity);
+            Debug.Log("positions: " + body.position.y);
+        }
     }
 }
 

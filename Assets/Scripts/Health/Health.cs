@@ -174,10 +174,19 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E)){
-            // Debug.Log("Damage received");
-            Debug.Log($"Current health: {currentHealth}");
-            TakeDamage(1);
+        // if(Input.GetKeyDown(KeyCode.E)){
+        //     // Debug.Log("Damage received");
+        //     Debug.Log($"Current health: {currentHealth}");
+        //     TakeDamage(1);
+        // }
+        StartCoroutine(CheckPlayerHealth());
+    }
+
+    IEnumerator CheckPlayerHealth(){
+        if(currentHealth <= 0){
+            animator.Play("Die");
         }
+
+        yield return new WaitForSeconds(2);
     }
 }

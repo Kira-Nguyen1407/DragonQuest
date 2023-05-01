@@ -10,7 +10,7 @@ public class MainMenuSoundManager : SoundManager
         float currentVolume = PlayerPrefs.GetFloat("SoundVolumeInMenu");
         currentVolume = soundVolumeSlider.value;
         soundSource.volume = currentVolume;
-        Debug.Log("Sound Slider Value: " + currentVolume);
+        // Debug.Log("Sound Slider Value: " + currentVolume);
         PlayerPrefs.SetFloat("SoundVolumeInMenu", currentVolume);
     }
 

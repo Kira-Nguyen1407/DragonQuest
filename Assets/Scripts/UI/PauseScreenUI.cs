@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseScreenUI : MonoBehaviour
 {
@@ -9,17 +10,15 @@ public class PauseScreenUI : MonoBehaviour
     [SerializeField] private VolumeText musicVolumeText;
     [SerializeField] private VolumeText soundVolumeText;
 
-    // [SerializeField] private AudioSource audioSource;
-
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
         SetPauseScreen();
+    }
+
+    public void Restart(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Resume();
     }
 
     private void SetPauseScreen(){

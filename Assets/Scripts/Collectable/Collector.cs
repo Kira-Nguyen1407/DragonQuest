@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Collector : MonoBehaviour
 {
     [Header("Health")]
-    [SerializeField] private float healthValue;
+    private float healthValue;
 
     [Header("Score")]
     [SerializeField] private ScoreManager scoreManager;
@@ -36,6 +34,10 @@ public class Collector : MonoBehaviour
             }
             if(gameObject.tag == "SecretBook"){
                 other.GetComponent<CharacterMovement>().AddSecretBook();
+                scoreManager.UpdateSecretBookCounter();
+            }
+            if(gameObject.tag == "Key"){
+                scoreManager.UpdateKeyCounter();
             }
             gameObject.SetActive(false);
         }

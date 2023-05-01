@@ -30,9 +30,9 @@ public class SlimeEnemy : Enemy
                 }
             }
         }
-        else{
-            enemyHealth.Deactivate();
-        }
+        // else{
+        //     enemyHealth.Deactivate();
+        // }
         
         
         // if(enemyPatrol != null){
@@ -89,10 +89,16 @@ public class SlimeEnemy : Enemy
         attackPoint.EnableMeleeRange();
     }
 
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(other.gameObject.tag == "Player"){
+            Debug.Log("Colliding with the player");
+            DamagePlayer();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Player"){
-            Health playerHealth = other.GetComponent<Health>();
-            playerHealth.TakeDamage(1);
+            DamagePlayer();
         }
     }
 }
