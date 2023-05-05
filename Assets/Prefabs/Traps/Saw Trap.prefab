@@ -209,7 +209,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8604a3cb39df0f4b93f63b510fdd6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
   speed: 5
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
+  startPoint: {fileID: 5135737213175028758}
+  endPoint: {fileID: 8069771664573339971}

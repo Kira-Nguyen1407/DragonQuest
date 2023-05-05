@@ -19,6 +19,13 @@ public class CharacterAttack : MonoBehaviour
     private float coolDownTimer;
     private bool meleeAttack;
 
+    [Header("Collectables")]
+    private int nSecretBooks;
+    private int totalSecretBooks;
+
+    [Header("Flags")]
+    [SerializeField] private bool inLevel1;
+
     // public Projectile projectile;
     // Start is called before the first frame update
     void Start()
@@ -28,8 +35,14 @@ public class CharacterAttack : MonoBehaviour
         coolDownTimer = Mathf.Infinity;
         // attackCoolDown = 0.2f;
         meleeAttack = true;
+        totalSecretBooks = 3;
+        if(inLevel1){
+            nSecretBooks = 0;
+        }
+        else{
+            nSecretBooks = totalSecretBooks;
+        }
         // projectile = GameObject.FindGameObjectWithTag("FireBall").GetComponent<Projectile>();
-
     }
 
     // Update is called once per frame
@@ -45,12 +58,39 @@ public class CharacterAttack : MonoBehaviour
         coolDownTimer = coolDownTimer + Time.deltaTime;
     }
 
+    public void AddRedSecretBook(){
+        // nSecretBooks = PlayerPrefs.GetInt("nRedSecretBooks");
+        nSecretBooks++;
+        // PlayerPrefs.SetInt("nRedSecretBooks", nSecretBooks);
+        // PlayerPrefs.Save();
+    }
+
+    // void ResetNumberOfSecretBooks(){
+    //     PlayerPrefs.SetInt("nRedSecretBooks", 0);
+    // }
+
+    // void CheckNumOfSecretBooks(){
+    //     nSecretBooks = PlayerPrefs.GetInt("nRedSecretBooks");
+    //     PlayerPrefs.SetInt("nRedSecretBooks", nSecretBooks);
+    // }
+
+    public bool CollectedAllRedSecretBooks(){
+        if(nSecretBooks >= totalSecretBooks){
+            return true;
+        }
+
+        return false;
+    }
+
     private void Attack(){
         isAttacking = true;
         if(meleeAttack){
+            // CheckNumOfSecretBooks();
             // Perform melee attack
-            SoundManager.instance.PlaySound(meleeAttackSound);
-            animator.SetTrigger("meleeAttack");
+            if(CollectedAllRedSecretBooks()){
+                SoundManager.instance.PlaySound(meleeAttackSound);
+                animator.SetTrigger("meleeAttack");
+            }
         }
         else{
             // Perform ranged attack

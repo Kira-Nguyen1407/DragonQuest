@@ -15,12 +15,6 @@ public class PlayerRespawn : MonoBehaviour
         initPosition = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Respawn(){
         if(currentCheckpoint != null){
             transform.position = currentCheckpoint.position; // Move the player to the last checkpoint

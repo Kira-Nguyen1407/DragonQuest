@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FireTrap : Trap
@@ -26,7 +25,14 @@ public class FireTrap : Trap
         activeTime = 2.0f;
     }
 
-    override protected void OnTriggerEnter2D(Collider2D other) {
+
+    /*
+        This trap only uses the OnTriggerStay2D method of the base class, so the empty OnTriggerEnter2D method 
+    is created to prevent the player from being able to get damaged doubly
+    */    
+    protected override void OnTriggerEnter2D(Collider2D other){}
+
+    protected override void OnTriggerStay2D(Collider2D other) {
         if(other.tag == "Player"){
             if(!triggered){
                 // trigger the fire trap
@@ -34,7 +40,7 @@ public class FireTrap : Trap
             }
             
             if(activated){
-                base.OnTriggerEnter2D(other);
+                base.OnTriggerStay2D(other);
             }
         }
     }

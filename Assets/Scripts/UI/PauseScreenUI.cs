@@ -5,6 +5,7 @@ public class PauseScreenUI : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private GameObject dialogBox;
     [SerializeField] private CharacterAttack characterAttack;
     [SerializeField] private CharacterMovement characterMovement;
     [SerializeField] private VolumeText musicVolumeText;
@@ -18,7 +19,7 @@ public class PauseScreenUI : MonoBehaviour
 
     public void Restart(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Resume();
+        ResetTimeAndPlayer();
     }
 
     private void SetPauseScreen(){
@@ -40,10 +41,16 @@ public class PauseScreenUI : MonoBehaviour
         pauseScreen.SetActive(_status);
     }
 
-    public void Resume(){
+    private void ResetTimeAndPlayer(){
         Time.timeScale = 1;
         characterAttack.enabled = true;
         characterMovement.enabled = true;
+    }
+
+    public void Resume(){
+        if(!dialogBox.activeInHierarchy){
+            ResetTimeAndPlayer();
+        }
         // audioSource.Play();
         PauseGame(false);
     }

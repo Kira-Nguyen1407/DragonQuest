@@ -76,7 +76,7 @@ public class CharacterMovement : MonoBehaviour
         checkingFallingDownPeriod = 0.05f;
         fallingTime = 0;
         isFallingDown = false;
-        maxSpeedAllowed = 1.8f;
+        maxSpeedAllowed = 1.5f;
         // collidingWithObstacle = false;
     }
 
@@ -109,15 +109,18 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        isGrounded();
         if(isFallingDown){
             if(Time.frameCount % 5 == 0){
                 fallingTime = fallingTime + 0.1f;
                 fallingSpeed = body.gravityScale*fallingTime;
                 // Debug.Log("Falling speed: " + fallingSpeed);
-                if(fallingSpeed < maxSpeedAllowed){
+                if(fallingSpeed >= maxSpeedAllowed){
                     // Decrease the gravity and player's mass to prevent the player from falling through the ground
                     body.gravityScale = Mathf.Clamp(body.gravityScale - 3.5f, 0, initGravity);
                     body.mass = Mathf.Clamp(body.mass - 0.8f, 0, initPlayerMass);
+                    // body.gravityScale = 0;
+                    // body.mass = 0;
                 }
             }
         }
@@ -391,6 +394,10 @@ public class CharacterMovement : MonoBehaviour
                 return false;
             }
             else{
+                // if(raycastHit.collider.gameObject.transform.position.y > transform.position.y){
+                //     Debug.Log("Here");
+                //     transform.position = new Vector3(transform.position.x, raycastHit.collider.gameObject.transform.position.y + 1.0f, transform.position.z);
+                // }
                 return true;
             }
         }

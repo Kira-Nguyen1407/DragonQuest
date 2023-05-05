@@ -6,23 +6,25 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private Text keysCounterText;
     [SerializeField] private Text SBsCounterText; // Secret books
-    private int currentScore;
     private int secretBookCounter;
     private int keyCounter;
     private int totalKeys;
     private int totalSecretBooks;
 
     private void Start(){
-        currentScore = 0;
         secretBookCounter = 0;
         keyCounter = 0;
         totalKeys = 1;
         totalSecretBooks = 3;
+        UpdateScore(0);
     }
 
     public void UpdateScore(int _score){
-        currentScore = currentScore + _score;
-        scoreText.text = currentScore.ToString();
+        if(scoreText != null){
+            PersistenceData.totalScore = PersistenceData.totalScore + _score;
+            scoreText.text = PersistenceData.totalScore.ToString();
+        }
+        
     }
 
     public void UpdateSecretBookCounter(){

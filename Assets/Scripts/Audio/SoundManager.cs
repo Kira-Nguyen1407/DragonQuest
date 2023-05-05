@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     // private AudioSource _audioSource;
     [SerializeField] protected AudioSource soundSource;
     [SerializeField] protected AudioSource musicSource;
+    [SerializeField] private bool isEndScreen;
     
 
      
@@ -14,8 +15,10 @@ public class SoundManager : MonoBehaviour
     public virtual void Start()
     {
         instance = this;
-        ChangeMusicVolume(0);
-        ChangeSoundVolume(0);
+        if(!isEndScreen){
+            ChangeMusicVolume(0);
+            ChangeSoundVolume(0);
+        }
     }
 
     public void PlaySound(AudioClip _sound){

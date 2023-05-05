@@ -11,6 +11,9 @@ public class Collector : MonoBehaviour
     [Header("Sound effects")]
     [SerializeField] private AudioClip collectedSound;
 
+    [Header("Flags")]
+    [SerializeField] private bool blueBook;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,8 +36,15 @@ public class Collector : MonoBehaviour
                 scoreManager.UpdateScore(50);
             }
             if(gameObject.tag == "SecretBook"){
-                other.GetComponent<CharacterMovement>().AddSecretBook();
+                if(blueBook){
+                    other.GetComponent<CharacterMovement>().AddSecretBook();
+                }
+                else{
+                    other.GetComponent<CharacterAttack>().AddRedSecretBook();
+                }
                 scoreManager.UpdateSecretBookCounter();
+
+                
             }
             if(gameObject.tag == "Key"){
                 scoreManager.UpdateKeyCounter();

@@ -19,6 +19,10 @@ public class CheckingDoor : MonoBehaviour
     [Header("Flags")]
     private bool disableFlag;
     [SerializeField] private bool isFinalDoor;
+    [SerializeField] private bool inLevel1;
+
+    [Header("Dialog Trigger")]
+    [SerializeField] private DialogTrigger dialogTrigger;
 
 
     // [Header("Checking variables")]
@@ -69,9 +73,17 @@ public class CheckingDoor : MonoBehaviour
         if(other.gameObject.tag == "Player"){
             if(disableFlag){
                 if(isFinalDoor){
-                    SceneManager.LoadScene("End");
+                    if(inLevel1){
+                        SceneManager.LoadScene("Level2");
+                    }
+                    else{
+                        SceneManager.LoadScene("End");
+                    }
                 }
                 DeactivateDoor();
+            }
+            else{
+                dialogTrigger.StartDialog();
             }
             
         }

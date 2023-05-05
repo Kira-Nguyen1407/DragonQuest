@@ -16,4 +16,17 @@ public class Trap : MonoBehaviour
             playerHealth.TakeDamage(damage);
         }
     }
+
+    protected virtual void OnTriggerStay2D(Collider2D other) {
+        if(other.tag == "Player"){
+            Health playerHealth = other.GetComponent<Health>();
+            if(playerHealth.isHurting){
+                damage = 0;
+            }
+            else{
+                damage = 1;
+            }
+            playerHealth.TakeDamage(damage);
+        }
+    }
 }
