@@ -1,0 +1,4 @@
+# Ignore all directories except Asset
+/*
+!\Assets
+!\Assembly-CSharp.csproj
