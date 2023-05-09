@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private float checkingFallingDownPeriod;
     private float fallingSpeed;
     private float fallingTime;
+    private float fallDownSpeed;
     private float maxSpeedAllowed;
     // public bool collidingWithObstacle;
 
@@ -76,6 +77,7 @@ public class CharacterMovement : MonoBehaviour
         checkingFallingDownPeriod = 0.05f;
         fallingTime = 0;
         isFallingDown = false;
+        fallDownSpeed = 0.5f;
         maxSpeedAllowed = 1.5f;
         // collidingWithObstacle = false;
     }
@@ -164,15 +166,21 @@ public class CharacterMovement : MonoBehaviour
     private void HorizontalMoveInTheAir(){
         // Debug.Log("HorizontalMoveInTheAir");
         SetDirection();
-        body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
+        // body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
 
-        // if(CollidingWithObstacles()){
-        //     // Debug.Log("Colliding with an obstacle");
-        //     body.velocity = Vector2.zero;
-        // }
-        // else{
-        //     // Debug.Log("No longer colliding with an obstacle");
-        // }
+        if(CollidingWithObstacles()){
+            Debug.Log("Colliding with an obstacle");
+
+            if(horizontalInput != 0 && Mathf.Sign(horizontalInput) != Mathf.Sign(transform.localRotation.x)){
+                if(!Input.GetKeyDown(KeyCode.W)){
+                    body.velocity = new Vector2(0, body.velocity.y - fallDownSpeed);
+                }
+            }
+        }
+        else{
+            Debug.Log("No longer colliding with an obstacle");
+            body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
+        }
         // if(!collidingWithObstacle){
         //     Debug.Log("Moving horizontal in the air");
         //     body.velocity = new Vector2(horizontalInput*moveSpeed, body.velocity.y);
@@ -442,14 +450,20 @@ public class CharacterMovement : MonoBehaviour
         return hit.collider != null;
     }
 
-    // public bool CollidingWithObstacles(){
+    public bool CollidingWithObstacles(){
 
-    //     RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right*xRange*transform.localScale.x*colliderDistance,
-    //         new Vector3(boxCollider.bounds.size.x*xRange, boxCollider.bounds.size.y*yRange, boxCollider.bounds.size.z), 0,
-    //             new Vector2(transform.localScale.x,0), 0, groundLayer);
+        RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right*xRange*transform.localScale.x*colliderDistance,
+            new Vector3(boxCollider.bounds.size.x*xRange, boxCollider.bounds.size.y*yRange, boxCollider.bounds.size.z), 0,
+                new Vector2(transform.localScale.x,0), 0, groundLayer);
 
-    //     return hit.collider != null;
-    // }
+        if(hit.collider != null){
+            if(hit.collider.gameObject.tag != "CheckingDoor"){
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public virtual void OnDrawGizmos() {
         Gizmos.color = Color.red;

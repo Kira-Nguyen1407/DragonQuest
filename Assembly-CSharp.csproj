@@ -100,6 +100,7 @@
      <Compile Include="Assets\Scripts\Audio\SoundManager.cs" />
      <Compile Include="Assets\Scripts\Enemies\SlimeEnemyPatrol.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+     <Compile Include="Assets\Scripts\UI\EndScreen.cs" />
      <Compile Include="Assets\Scripts\Collectable\Collector.cs" />
      <Compile Include="Assets\Scripts\UI\KeyManager.cs" />
      <Compile Include="Assets\Scripts\UI\SelectionArrow.cs" />
@@ -109,6 +110,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+     <Compile Include="Assets\Scripts\Core\TransitionScenesController.cs" />
      <Compile Include="Assets\Scripts\UI\GameOverScreenUI.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
@@ -117,8 +119,6 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\Scripts\Traps\SawTrap.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\UI\EndScreen.cs" />
-     <Compile Include="Assets\Scripts\Core\TransitionScenesController.cs" />
      <None Include="Assets\Sprites\Knight Adventure\Knight Files\Read Me.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />

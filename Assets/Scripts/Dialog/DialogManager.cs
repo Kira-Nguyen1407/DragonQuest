@@ -52,7 +52,7 @@ public class DialogManager : MonoBehaviour
             DisplayMessage();
         }
         else{
-            Debug.Log("Conversation ended successfully!");
+            // Debug.Log("Conversation ended successfully!");
             conversationEnded = true;
             // isActive = false;
             // if(!dialogTrigger.isNotice){
